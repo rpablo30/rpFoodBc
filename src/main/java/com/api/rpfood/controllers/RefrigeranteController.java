@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/bebidas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class RefrigeranteController {
 
     private final RefrigeranteService refrigeranteService;
@@ -23,7 +24,6 @@ public class RefrigeranteController {
     @GetMapping
     public ResponseEntity<List<Refrigerante>> getAllRefrigerantes() {
         List<Refrigerante> refrigerantes = refrigeranteService.getAllRefrigerantes();
-        // Adicione logs para verificar
         System.out.println("Chamada para getAllRefrigerantes. Número de refrigerantes: " + refrigerantes.size());
         return ResponseEntity.ok(refrigerantes);
     }

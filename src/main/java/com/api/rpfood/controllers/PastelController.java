@@ -22,6 +22,12 @@ public class PastelController {
 
     @GetMapping
     public List<Pastel> obterTodosPasteis() {
-        return pastelService.obterTodosPasteis();
+        System.out.println("Endpoint /api/pasteis chamado");
+        try {
+            return pastelService.obterTodosPasteis();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }
