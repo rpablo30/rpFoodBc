@@ -3,6 +3,8 @@ package com.api.rpfood.controllers;
 import com.api.rpfood.models.Cliente;
 import com.api.rpfood.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,10 +31,19 @@ public class ClienteController {
         return clienteService.getClienteById(id);
     }
 
-    @PostMapping
-    public Cliente addCliente(@RequestBody Cliente cliente) {
-        return clienteService.addCliente(cliente);
+    @PostMapping("/adicionar")
+    public ResponseEntity<Cliente> adicionarCliente(@RequestBody Cliente cliente) {
+        ResponseEntity<Cliente> response = clienteService.addCliente(cliente);
+
+        if (response.getStatusCode() == HttpStatus.CREATED) {
+            return response;
+        } else {
+            // Trate o erro de forma adequada, por exemplo, com um log
+            System.out.println("Erro ao adicionar cliente: " + response.getBody());
+            return ResponseEntity.status(response.getStatusCode()).body(null);
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public void deleteCliente(@PathVariable Long id) {
