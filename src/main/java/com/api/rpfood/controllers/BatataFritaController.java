@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/batatasfritas")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BatataFritaController {
 
     private final BatataFritaService batataFritaService;
