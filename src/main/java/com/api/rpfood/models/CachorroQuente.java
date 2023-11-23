@@ -16,8 +16,16 @@ public class CachorroQuente {
     private int id;
     private String nome;
     private String descricao;
-    private double preco;
+    private double price;
     private String imagem;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public int getId() {
         return id;
@@ -43,13 +51,6 @@ public class CachorroQuente {
         this.descricao = descricao;
     }
 
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
 
     public String getImagem() {
         return imagem;

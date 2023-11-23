@@ -17,7 +17,15 @@ public class Acai {
     private String descricao;
 
     @Column(nullable = false)
-    private double preco;
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     @Column
     private int opcionais;
@@ -52,13 +60,7 @@ public class Acai {
         this.descricao = descricao;
     }
 
-    public double getPreco() {
-        return preco;
-    }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
 
     public int getOpcionais() {
         return opcionais;

@@ -17,7 +17,7 @@ public class Refrigerante {
     private String descricao;
 
     @Column(nullable = false)
-    private double preco;
+    private double price;
 
     @Column
     private int opcionais;
@@ -27,6 +27,15 @@ public class Refrigerante {
 
     @Column(nullable = false)
     private String categoria;
+
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public Long getId() {
         return id;
@@ -50,14 +59,6 @@ public class Refrigerante {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
     }
 
     public int getOpcionais() {

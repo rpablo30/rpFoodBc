@@ -22,7 +22,7 @@ public class Salgado {
     private String descricao;
 
     @Column(nullable = false)
-    private double preco;
+    private double price;
 
     @Column
     private int opcionais;
@@ -57,12 +57,12 @@ public class Salgado {
         this.descricao = descricao;
     }
 
-    public double getPreco() {
-        return preco;
+    public double getPrice() {
+        return price;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public int getOpcionais() {

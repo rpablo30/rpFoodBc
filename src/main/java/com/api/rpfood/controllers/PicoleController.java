@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/picoles")
+@RequestMapping("/api/picole")
 @CrossOrigin(origins = "http://localhost:4200")
 public class PicoleController {
 
