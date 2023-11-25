@@ -1,10 +1,12 @@
 package com.api.rpfood.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -41,6 +43,19 @@ public class Pedidos {
 
     @Column(nullable = true)
     private BigDecimal valorTotal;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    private Date dataHoraPedido;
+
+
+    public Date getDataHoraPedido() {
+        return dataHoraPedido;
+    }
+
+    public void setDataHoraPedido(Date dataHoraPedido) {
+        this.dataHoraPedido = dataHoraPedido;
+    }
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedido> itensDoPedido;
