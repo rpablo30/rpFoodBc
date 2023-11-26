@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/pedidos")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -33,6 +35,17 @@ public class PedidoController {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Erro ao processar o pedido: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Pedidos>> listarPedidosPorStatus(@RequestParam String status) {
+        try {
+            List<Pedidos> pedidos = pedidoService.listarPedidosPorStatus(status);
+            return new ResponseEntity<>(pedidos, HttpStatus.OK);
+        } catch (Exception e) {
+            // código para lidar com erros
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

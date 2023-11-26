@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class PedidoService {
@@ -55,6 +56,17 @@ public class PedidoService {
         }
     }
 
+    public List<Pedidos> listarPedidosPorStatus(String status) {
+        try {
+            return pedidoRepository.findByStatus(status);
+        } catch (Exception e) {
+            // Adicione log em caso de exceção
+            System.err.println("Erro ao listar pedidos por status: " + e.getMessage());
+
+            // Lança uma exceção mais específica com uma mensagem informativa
+            throw new RuntimeException("Erro ao listar pedidos por status. Por favor, tente novamente mais tarde.");
+        }
+    }
 
 
 }
