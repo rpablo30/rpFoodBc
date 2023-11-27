@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PedidoService {
@@ -16,6 +17,15 @@ public class PedidoService {
     @Autowired
     public PedidoService(PedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
+    }
+    public Optional<Pedidos> buscarPedidoPorId(Long id) {
+        return pedidoRepository.findById(id);
+    }
+    public List<Pedidos> listarTodosPedidos() {
+        return pedidoRepository.findAll();
+    }
+    public Pedidos atualizarPedido(Pedidos pedido) {
+        return pedidoRepository.save(pedido);
     }
 
     public Pedidos criarPedido(Pedidos pedido) {
@@ -65,6 +75,33 @@ public class PedidoService {
 
             // Lança uma exceção mais específica com uma mensagem informativa
             throw new RuntimeException("Erro ao listar pedidos por status. Por favor, tente novamente mais tarde.");
+        }
+    }
+
+
+    public Pedidos atualizarStatus(Long id, String novoStatus) {
+        try {
+            Pedidos pedido = pedidoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+            pedido.setStatus(novoStatus);
+
+            // Adicione log antes de salvar
+            System.out.println("Atualizando status do pedido no banco de dados...");
+
+            // Salva o pedido no banco de dados
+            Pedidos pedidoAtualizado = pedidoRepository.save(pedido);
+
+            // Adicione log após salvar
+            System.out.println("Status do pedido atualizado com sucesso.");
+
+            return pedidoAtualizado;
+        } catch (Exception e) {
+            // Adicione log em caso de exceção
+            System.err.println("Erro ao atualizar status do pedido: " + e.getMessage());
+
+            // Lança uma exceção mais específica com uma mensagem informativa
+            throw new RuntimeException("Erro ao atualizar status do pedido. Por favor, tente novamente mais tarde.");
         }
     }
 

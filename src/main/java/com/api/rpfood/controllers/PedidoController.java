@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pedidos")
@@ -40,15 +41,56 @@ public class PedidoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Pedidos>> listarPedidosPorStatus(@RequestParam String status) {
+    public ResponseEntity<List<Pedidos>> listarPedidosPorStatus(@RequestParam(required = false) String status) {
+        System.out.println("Parâmetro 'status' recebido: " + status);
+
         try {
-            List<Pedidos> pedidos = pedidoService.listarPedidosPorStatus(status);
+            List<Pedidos> pedidos;
+            if (status != null) {
+                pedidos = pedidoService.listarPedidosPorStatus(status);
+            } else {
+                pedidos = pedidoService.listarTodosPedidos();
+            }
             return new ResponseEntity<>(pedidos, HttpStatus.OK);
         } catch (Exception e) {
-            // código para lidar com erros
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedidos> atualizarStatus(@PathVariable Long id, @RequestBody Pedidos novoPedido) {
+        try {
+            // Verificar se o ID do pedido é válido
+            if (id == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            // Buscar o pedido no banco de dados pelo ID
+            Optional<Pedidos> optionalPedido = pedidoService.buscarPedidoPorId(id);
+
+            if (optionalPedido.isPresent()) {
+                Pedidos pedido = optionalPedido.get();
+
+                // Atualizar o status do pedido
+                pedido.setStatus(novoPedido.getStatus());  // Aqui você pode ajustar conforme necessário
+
+                // Salvar o pedido atualizado no banco de dados
+                Pedidos pedidoAtualizado = pedidoService.atualizarPedido(pedido);
+
+                return new ResponseEntity<>(pedidoAtualizado, HttpStatus.OK);
+            } else {
+                // Retornar BAD_REQUEST quando o ID não for encontrado
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
 
 
 }

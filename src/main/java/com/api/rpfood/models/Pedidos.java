@@ -1,6 +1,7 @@
 package com.api.rpfood.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Setter
 @Getter
 @Table(name = "pedidos")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pedidos {
 
     @Id
@@ -44,10 +46,19 @@ public class Pedidos {
     @Column(nullable = true)
     private BigDecimal valorTotal;
 
+    private String hoverStatus;
+
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dataHoraPedido;
 
+    public String getHoverStatus() {
+        return hoverStatus;
+    }
+
+    public void setHoverStatus(String hoverStatus) {
+        this.hoverStatus = hoverStatus;
+    }
 
     public Date getDataHoraPedido() {
         return dataHoraPedido;
