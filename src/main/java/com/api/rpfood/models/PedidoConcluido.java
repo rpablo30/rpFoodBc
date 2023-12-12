@@ -2,6 +2,7 @@ package com.api.rpfood.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "pedido_concluido")
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties("itensDoPedidoConcluido")
 public class PedidoConcluido {
 
     @Id
@@ -49,6 +50,11 @@ public class PedidoConcluido {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private Date dataHoraPedido;
 
+    @JsonProperty("itensDoPedido")
     @OneToMany(mappedBy = "pedidoConcluido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemPedidoConcluido> itensDoPedidoConcluido;
+
+
+    public PedidoConcluido() {
+    }
 }

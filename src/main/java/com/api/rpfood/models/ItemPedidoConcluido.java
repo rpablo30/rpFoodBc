@@ -21,6 +21,9 @@ public class ItemPedidoConcluido {
     @JoinColumn(name = "pedido_concluido_id")
     private PedidoConcluido pedidoConcluido;
 
+    public ItemPedidoConcluido() {
+    }
+
     @Column(nullable = false)
     private String nome;
 
