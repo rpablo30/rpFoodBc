@@ -26,8 +26,17 @@ public class PedidoConcluidoService {
     public Optional<PedidoConcluido> buscarPedidoConcluidoPorId(Long id) {
         return pedidoConcluidoRepository.findById(id);
     }
+    public boolean existsById(Long id) {
+        return pedidoConcluidoRepository.existsById(id);
+    }
+
+    public void excluirPedidoConcluido(Long id) {
+        pedidoConcluidoRepository.deleteById(id);
+    }
+
 
     public void salvarPedidoConcluido(PedidoConcluido pedidoConcluido) {
         pedidoConcluidoRepository.save(pedidoConcluido);
     }
+
 }

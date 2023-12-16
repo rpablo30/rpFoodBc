@@ -1,5 +1,6 @@
 package com.api.rpfood.services;
 
+import com.api.rpfood.models.ItemPedido;
 import com.api.rpfood.models.Pedidos;
 import com.api.rpfood.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,6 @@ public class PedidoService {
     }
     public List<Pedidos> listarTodosPedidos() {
         return pedidoRepository.findAll();
-    }
-    public Pedidos atualizarPedido(Pedidos pedido) {
-        return pedidoRepository.save(pedido);
     }
 
     public Pedidos criarPedido(Pedidos pedido) {
@@ -79,29 +77,80 @@ public class PedidoService {
     }
 
 
-    public Pedidos atualizarStatus(Long id, String novoStatus) {
+    public Pedidos atualizarPedido(Pedidos pedido) {
         try {
-            Pedidos pedido = pedidoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+            // Verifique se o pedido tem um ID válido
+            if (pedido.getId() == null) {
+                throw new RuntimeException("ID do pedido é nulo. O pedido deve ser persistido antes de atualizar.");
+            }
 
-            pedido.setStatus(novoStatus);
+            // Busque o pedido no banco de dados pelo ID
+            Optional<Pedidos> optionalPedido = pedidoRepository.findById(pedido.getId());
 
-            // Adicione log antes de salvar
-            System.out.println("Atualizando status do pedido no banco de dados...");
+            if (optionalPedido.isPresent()) {
+                Pedidos pedidoExistente = optionalPedido.get();
 
-            // Salva o pedido no banco de dados
-            Pedidos pedidoAtualizado = pedidoRepository.save(pedido);
+                // Atualize os campos do pedido existente com os novos valores
+                pedidoExistente.setClienteNome(pedido.getClienteNome());
+                pedidoExistente.setClienteTelefone(pedido.getClienteTelefone());
+                pedidoExistente.setClienteEndereco(pedido.getClienteEndereco());
+                pedidoExistente.setFormaPagamento(pedido.getFormaPagamento());
+                pedidoExistente.setTipoEntrega(pedido.getTipoEntrega());
+                pedidoExistente.setTaxaEntrega(pedido.getTaxaEntrega());
+                pedidoExistente.setStatus(pedido.getStatus());
+                pedidoExistente.setValorTotal(pedido.getValorTotal());
+                pedidoExistente.setDataHoraPedido(pedido.getDataHoraPedido());
 
-            // Adicione log após salvar
-            System.out.println("Status do pedido atualizado com sucesso.");
+                // Atualize os itens do pedido
+                List<ItemPedido> novosItens = pedido.getItensDoPedido();
+                List<ItemPedido> itensExistentes = pedidoExistente.getItensDoPedido();
 
-            return pedidoAtualizado;
+                // Remova os itens do pedido que não estão mais presentes na lista
+                itensExistentes.removeIf(item -> item.getId() != null && !novosItens.contains(item));
+
+                // Associe os itens do pedido ao pedido existente
+                novosItens.forEach(item -> item.setPedido(pedidoExistente));
+
+                // Atualize a lista de itens do pedido existente
+                itensExistentes.clear();
+                itensExistentes.addAll(novosItens);
+
+                // Salve o pedido atualizado no banco de dados
+                return pedidoRepository.save(pedidoExistente);
+            } else {
+                // Retorne null ou lance uma exceção, dependendo do seu requisito
+                return null;
+            }
         } catch (Exception e) {
-            // Adicione log em caso de exceção
-            System.err.println("Erro ao atualizar status do pedido: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar o pedido: " + e.getMessage());
+        }
+    }
 
-            // Lança uma exceção mais específica com uma mensagem informativa
-            throw new RuntimeException("Erro ao atualizar status do pedido. Por favor, tente novamente mais tarde.");
+    public void excluirPedido(Long id) {
+        try {
+            // Verifique se o ID do pedido é válido
+            if (id == null) {
+                throw new IllegalArgumentException("ID do pedido não pode ser nulo.");
+            }
+
+            // Verifique se o pedido existe no banco de dados
+            Optional<Pedidos> optionalPedido = pedidoRepository.findById(id);
+
+            if (optionalPedido.isPresent()) {
+                // Remova o pedido do banco de dados
+                pedidoRepository.deleteById(id);
+
+                // Adicione log ou outras ações necessárias após excluir o pedido
+                System.out.println("Pedido removido com sucesso.");
+            } else {
+                // Lança uma exceção se o pedido não for encontrado
+                throw new RuntimeException("Pedido não encontrado com o ID: " + id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Adicione log ou ações necessárias em caso de erro
+            throw new RuntimeException("Erro ao excluir o pedido: " + e.getMessage());
         }
     }
 
