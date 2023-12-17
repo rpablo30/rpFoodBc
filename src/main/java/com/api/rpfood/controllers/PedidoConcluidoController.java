@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +35,18 @@ public class PedidoConcluidoController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<PedidoConcluido>> listarPedidosConcluidos() {
+        try {
+            List<PedidoConcluido> pedidosConcluidos = pedidoConcluidoService.listarTodosPedidosConcluidos();
+            return new ResponseEntity<>(pedidosConcluidos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @PostMapping("/enviar-relatorio")
     public ResponseEntity<String> enviarRelatorio(@RequestBody PedidoConcluido pedidoConcluido) {
